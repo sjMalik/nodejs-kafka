@@ -1,0 +1,25 @@
+{
+  "name": "kafka",
+  "version": "1.0.0",
+  "description": "Node consumer and publisher with kafka",
+  "main": "index.js",
+  "scripts": {
+    "start:producer": "SET DEBUG=node-kafka:* & node producer/index.js",
+    "start:consumer": "SET DEBUG=node-kafka:* & node consumer/index.js",
+    "lint": "eslint .  --ext .js",
+    "lint-fix": "eslint --fix .  --ext .js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "avsc": "^5.7.7",
+    "debug": "^4.3.4",
+    "node-rdkafka": "^2.16.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.44.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.27.5"
+  }
+}
