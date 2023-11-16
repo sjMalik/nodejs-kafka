@@ -34,6 +34,8 @@ Avro stores the data definition in JSON format making it easy to read and interp
 
 # Building event-driven systems with kafka
 
+https://www.youtube.com/watch?v=6-1N8wIZ1ic&ab_channel=TomDoesTech
+
 ## What are we building?
 * A simple event-driven system that will allow us to send messages to kafka and then consume them
 
