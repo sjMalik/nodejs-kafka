@@ -1,6 +1,27 @@
+POST http://localhost:8080/api/createTopic
+content-type: application/json
+
+{
+    "topic": "Hello",
+    "noOfPartitions": 4
+}
+
+###
 POST http://localhost:8080/api/send
 content-type: application/json
 
 {
-    "message": "Hello World Again"
+    "topic": "Hello",
+    "message": {
+        "key": "Key_3",
+        "value": "Hello"
+    }
+}
+
+###
+POST http://localhost:8080/api/receive
+content-type: application/json
+
+{
+    "topic": "Hello"
 }

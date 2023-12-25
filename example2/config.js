@@ -1,7 +1,7 @@
 import debug from 'debug';
 import { Kafka } from 'kafkajs';
 
-const logger = debug('node-kafka:config')
+const logger = debug('node-kafka:config');
 
 class KafkaConfig {
   constructor() {
@@ -9,43 +9,66 @@ class KafkaConfig {
       clientId: 'nodejs-kafka',
       brokers: ['localhost:9092'],
     });
-    this.producer = this.kafka.producer();
-    this.consumer = this.kafka.consumer({ groupId: 'test-group' });
+    // producer = this.kafka.producer();
+    // consumer = this.kafka.consumer({ groupId: 'test-group' });
+  }
+
+  // Function to create a topic with multiple partitions
+  async createTopic(topicName, NoOfPartitions) {
+    try {
+      // Create an admin client to manage Kafka topics
+      const admin = this.kafka.admin();
+      await admin.connect();
+      await admin.createTopics({
+        topics: [{
+          topic: topicName.toString(),
+          // eslint-disable-next-line radix
+          numPartitions: parseInt(NoOfPartitions), // Number of partitions for the topic
+          replicationFactor: 1, // Replication factor, adjust as needed
+        }],
+      });
+      await admin.disconnect();
+    } catch (e) {
+      debug(e);
+    }
   }
 
   async produce(topic, messages) {
+    const producer = this.kafka.producer();
     try {
-      await this.producer.connect();
-      await this.producer.send({
+      await producer.connect();
+      await producer.send({
         topic,
         messages,
       });
     } catch (e) {
       debug(e);
     } finally {
-      await this.producer.disconnect();
+      await producer.disconnect();
     }
   }
 
-  async consume(topic, callback) {
+  async consume(topicName, callback) {
+    const consumer = this.kafka.consumer({ groupId: 'test-group' });
     try {
-      await this.consumer.connect();
-      await this.consumer.subscribe({
-        topic,
+      await consumer.connect();
+      await consumer.subscribe({
+        topic: topicName,
         fromBeginning: true,
       });
-      await this.consumer.run({
+      await consumer.run({
         eachMessage: async ({
           topic,
           partition,
           message,
         }) => {
-          const value = message.value.toString();
+          const value = `Received message: ${message.value.toString()} 
+          from partition ${partition} & topic ${topic}`;
           callback(value);
         },
       });
     } catch (e) {
-      debug(e);
+      logger(e);
     }
   }
 }
